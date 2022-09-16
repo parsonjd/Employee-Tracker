@@ -12,7 +12,7 @@ Employee-Tracker
 - [Test](#Test)
 - [Questions](#questions)
 ## Installation
-  Make sure to have mysql downloaded to your local machine. Fork the repository and download the required dependencies.  You will need to set up a logina and password with mysql and run
+  Make sure to have mysql downloaded to your local machine. Fork the repository and download the required dependencies. 
 ## Usage
   Run mysql -u root -p from the command line and then enter your password to get into mysql.  Run source ./db/schema.sql and then source ./db/seeds.sql from command line to create and populate your database.  Then type exit to get out of mysql.  Finally, run node index.js to open the application. A main menu will open up with inquirer to view or make changes to your database.
 ## License
