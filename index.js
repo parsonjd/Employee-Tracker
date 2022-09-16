@@ -5,7 +5,7 @@ const mysql = require("mysql2");
 const consoleTable = require("console.table");
 
 //Connect database
-const connection = mysql.createConnection({
+const db = mysql.createConnection({
     host: "localhost",
     port: 3306,
     user: "jeremy",
@@ -13,7 +13,7 @@ const connection = mysql.createConnection({
     database: "employeedb"
 });
 
-connection.connect(function (err) {
+db.connect(function (err) {
     if (err) throw err;
     console.clear();
     console.log("======================================");
@@ -21,13 +21,13 @@ connection.connect(function (err) {
     console.log("   WELCOME TO THE EMPLOYEE DATABASE   ");
     console.log("");
     console.log("======================================");
-    startApp();
+    mainMenu();
 });
 
 
 // List of choices for user input
 
-function startApp() {
+function mainMenu() {
     inquirer.prompt([
         {
             type: "list",
@@ -39,6 +39,7 @@ function startApp() {
                 "View All Employees",
                 "View All Employees by Department",
                 "View All Employees by Role",
+                "View All Employees by Manager",
                 "Add Department",
                 "Add Role",
                 "Add Employee",
@@ -73,6 +74,11 @@ function startApp() {
                 viewEmpsByRole();
                 break;
 
+            // Select view all employees by manager
+            case "View All Employees by Manager":
+                viewEmpsByMan();
+                break;
+
             //Add a department
             case "Add Department":
                 addDept();
@@ -100,3 +106,73 @@ function startApp() {
         }
     })
 };
+
+//Function to view all departments
+function viewAllDepts() {
+    db.query("SELECT department.id AS ID, department.name AS Department FROM department",
+        function (err, res) {
+            if (err) throw err;
+            console.log("");
+            console.clear();
+            console.table(res);
+            mainMenu();
+        })
+};
+
+function viewAllRoles() {
+    db.query("SELECT role.id as ID, role.title AS TITLE FROM role",
+        function (err, res) {
+            if (err) throw err
+            console.log("");
+            console.clear();
+            console.table(res);
+            mainMenu();
+        })
+
+};
+
+function viewAllEmps() {
+    db.query("SELECT CONCAT(employee.first_name, ' ', employee.last_name) AS NAME FROM employee",
+        function (err, res) {
+            if (err) throw err
+            console.log("");
+            console.clear();
+            console.table(res);
+            mainMenu();
+        })
+};
+
+function viewEmpsByRole() {
+    db.query("SELECT CONCAT(employee.first_name, ' ', employee.last_name) AS NAME, role.title AS TITLE FROM employee INNER JOIN role on employee.role_id = role.id ORDER BY role.title",
+        function (err, res) {
+            if (err) throw err
+            console.log("");
+            console.clear();
+            console.table(res);
+            mainMenu();
+        })
+};
+
+function viewEmpsByDept() {
+    db.query("SELECT CONCAT(employee.first_name, ' ', employee.last_name) AS NAME, department.name AS DEPT FROM role INNER JOIN employee on employee.role_id = role.id INNER JOIN department on department.id = role.department_id ORDER BY department.name",
+        function (err, res) {
+            if (err) throw err
+            console.log("");
+            console.clear();
+            console.table(res);
+            mainMenu();
+        })
+}
+
+function viewEmpsByMan() {
+    db.query("SELECT CONCAT(Emp.first_name, ' ', Emp.last_name) AS EMPLOYEE, CONCAT(Man.first_name, ' ', Man.last_name) AS MANAGER FROM Employee Emp INNER JOIN Employee Man on Emp.manager_id = Man.id ORDER BY Emp.last_name",
+        function (err, res) {
+            if (err) throw err
+            console.log("");
+            console.clear();
+            console.table(res);
+            mainMenu();
+        })
+}
+
+
